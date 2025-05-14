@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Inicio{% endblock %}
+{% block content %}
+
+<style>
+  body {
+    background: linear-gradient(135deg, #8e0e00, #1f1c18);
+    color: #fff;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .welcome-container {
+    padding: 40px 0;
+    text-align: center;
+  }
+
+  .welcome-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 1s ease-in-out;
+    max-width: 700px;
+    margin: auto;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ffe0e0;
+    margin-bottom: 20px;
+  }
+
+  .btn {
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin: 5px;
+    transition: 0.3s ease-in-out;
+  }
+
+  .btn-primary {
+    background-color: #e60023;
+    border: none;
+  }
+
+  .btn-success {
+    background-color: #009688;
+    border: none;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+
+  .card {
+    background-color: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #fff;
+    margin-top: 20px;
+  }
+
+  .card-title {
+    font-size: 1.4rem;
+    color: #ffdada;
+  }
+
+  .card-text {
+    font-size: 1rem;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<div class="welcome-container">
+  <div class="welcome-card">
+    <h1>¡Bienvenido a la Aplicación de Capacitación!</h1>
+    <p class="mb-4">Explora los cursos disponibles e inscríbete fácilmente.</p>
+    
+    {% if not current_user.is_authenticated %}
+      <a href="{{ url_for('register') }}" class="btn btn-primary">Registrarse</a>
+      <a href="{{ url_for('login') }}" class="btn btn-success">Iniciar Sesión</a>
+    {% else %}
+      <!-- Botón de inicio no se muestra cuando el usuario está autenticado -->
+      <a href="{{ url_for('index') }}" class="btn btn-success">Inicio</a>
+    {% endif %}
+  </div>
+
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">Cursos Disponibles</h2>
+    <div class="row justify-content-center">
+      {% for curso in cursos %}
+      <div class="col-md-6">
+        <div class="card p-3">
+          <h5 class="card-title">{{ curso.nombre }}</h5>
+          <p class="card-text">{{ curso.descripcion }}</p>
+          {% if current_user.is_authenticated %}
+          <form
+            method="post"
+            action="{{ url_for('inscribirse', curso_id=curso.id) }}"
+          >
+            <input
+              type="text"
+              name="ci"
+              class="form-control mb-2"
+              placeholder="Introduce tu CI para inscribirte"
+              required
+            />
+            <button type="submit" class="btn btn-success">Inscribirme</button>
+          </form>
+          {% else %}
+          <p><em>Inicia sesión para inscribirte</em></p>
+          {% endif %}
+        </div>
+      </div>
+      {% else %}
+      <p class="text-center mt-4">No hay cursos disponibles en este momento.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

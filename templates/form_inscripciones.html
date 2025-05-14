@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>
+           {% if inscripcion %}
+            Editar Inscripcion
+            {% else %}
+            Nueva Inscripcion 
+            {% endif %}
+        </h2>
+    </div>
+    <div class="card-body">
+        <form method="POST" action=" " >
+            <div class="mb-3">
+                <label for="" class="form-label"> Fecha</label>
+                <input type="date" class="form-control" name="fecha" value="{{inscripcion.fecha if inscripcion else ''}}" required>
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label"> Estudiante</label>
+                <select name="estudiante_id" class="form-select" required>
+                    <option value="">----------Seleccione estudiante----------</option>
+                    {% for estudiante in estudiantes %}
+                    <option value="{{estudiante.id}}"> {{estudiante.nombre}} </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label"> Curso</label>
+                <select name="curso_id" class="form-select" required>
+                    <option value="">----------Seleccione Curso----------</option>
+                    {% for curso in cursos %}
+                    <option value="{{curso.id}}"> {{curso.descripcion}} </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Enviar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
